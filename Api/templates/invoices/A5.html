@@ -1,0 +1,90 @@
+{% extends 'invoices/invoiceBase.html' %}
+{% load static %}
+{% load math_filters %}
+{% block title %}
+<title>Invoice A5</title>
+{% endblock %}
+{% block style %}
+<style>
+    @page{
+        size: A5;
+        margin: 5mm;
+        width: 148mm;
+        height: 210mm;
+    }
+    body{
+        height: 188mm;
+        }
+</style>
+{% endblock %}
+{% block content %}
+    <div class="container" id="container">
+        <div class='mt-4'>
+            <img src="{% static 'icons/logo.png' %}" alt="" style='max-height: 80px; max-width:80px'>
+        </div>
+        <div class="invoice-box">
+            <div class="invoice-content text-center">
+                <h6><b><i>Invoice</i></b></h6>
+                <p>{{data.0.address}}</p>
+            </div>
+        </div>
+
+        <div class="d-flex" style="border-bottom: 1px solid #ddd;">
+            <div class="left">
+                <p><b>Invoice No:</b> {{ data.0.inv_no }}</p>
+                <p><b>Date:</b> {{ data.0.inv_date }}</p>
+                <p><b>Customer:</b> {{ data.0.customer_name }}</p>
+            </div>
+            <div class="right">
+                {% if data.0.sale_type == 2 %}
+                <p><b>Payment Type:</b> Cash</p>
+                {% else %}
+                <p><b>Payment Type:</b> Credit</p>
+                {% endif %}
+                <p><b>Wk No:</b> 1</p>
+            </div>
+        </div>
+
+        <table class="m-1">
+            <thead>
+                <tr>
+                    <th>Item Description</th>
+                    <th>Quantity</th>
+                    <th>Rate</th>
+                    <th>Discount</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in data %}
+                  <tr>
+                    <td>{{ item.product_code|floatformat:0  }}</td>
+                    <td>{{ item.item_desc }}</td>
+                    <td>{{ item.qty|floatformat:0  }}</td>
+                    <td>{{ item.rate|floatformat:0  }}</td>
+                    <td>{{item.rate|apply_discount:item.discount|floatformat:0}}</td>
+                    <td>{{ item.rate|apply_discount:item.discount|multiply:item.qty|floatformat:0}}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+        </table><div class="d-flex mt-1">
+            <div class="left">
+                <p><b>Amount in Words:</b></p>
+                <p><b>Previous Balance:</b></p>
+                <p><b>Ledger Current Balance:</b></p>
+            </div>
+            <div class="right">
+                <p></p>
+                <p>{{ data.0.prv_bal }}</p>
+                <p><b>Total Amount:</b> {{ total|floatformat:0 }}</p>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Thanks for Shopping</p>
+            <p>Signature: __________________</p>
+        </div>
+
+
+    </div>
+{% endblock %}

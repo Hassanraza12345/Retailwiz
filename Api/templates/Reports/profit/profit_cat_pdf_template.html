@@ -1,0 +1,118 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Inventory PDF</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Fonts and basic CSS -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+    <style>
+        @page {
+            size: A4;
+            margin: 1cm;
+        }
+        body {
+            font-family: 'Open Sans', sans-serif;
+            font-size: 12px;
+            zoom: 0.95;
+        }
+        h1 {
+            text-align: center;
+            font-size: 24px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .breadcrumbs {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .page-title img {
+            width: 100px;
+            margin-bottom: 10px;
+        }
+        .page-title h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .card-title {
+            text-align: left;
+            font-weight: bold;
+        }
+        p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="breadcrumbs">
+        <div class="page-header">
+            <div class="page-title">
+                <img src="{{ logo }}" alt="Company Logo">
+                <h1>profit_category</h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="card">
+            <div class="card-header">
+                <p class="card-title"><b>Date:</b> {{ date }}</p>
+            </div>
+            <div class="card-body">
+                <table>
+                    <thead>
+                        <tr class="text-center">
+                            <tr class="text-center">
+                                <th>Index</th>
+                                <th>Item_desc</th>
+                                <th>Qty</th>
+                                <th>T_sale_value</th>
+                                <th>Cogs_value</th>
+                                <th>Dt_date</th>
+                                <th>Inv_no</th>
+                                <th>Location_id</th>
+                                <th>T_value</th>
+                            </tr>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in data %}
+                            <tr class="text-center">
+                                <td>{{forloop.counter}}</td>
+                                <td>{{item.item_desc}}</td>
+                                <td>{{item.qty}}</td>
+                                <td>{{item.t_sale_value}}</td>
+                                <td>{{item.cogs_value}}</td>
+                                <td>{{item.dt_date}}</td>
+                                <td>{{item.inv_no}}</td>
+                                <td>{{item.location_id}}</td>
+                                <td>{{item.t_value}}</td>
+                            </tr>
+                            {% empty %}
+                            <tr class="text-center">
+                                <td colspan="9">No Result Found</td></tr>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

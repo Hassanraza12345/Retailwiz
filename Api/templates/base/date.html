@@ -1,0 +1,34 @@
+{% extends 'base/index.html' %}
+{% block rightpanel %}
+<div class="col-lg-6">
+    <div class="card"></div>
+    <div class="card">
+        <div class="card-header">
+            <strong>Enter Duration</strong>
+        </div>
+        <div class="card-body card-block">
+            {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-danger">{{ message }}</div>
+            {% endfor %}
+            {% endif %}
+            <form action="#" method="post" class="form-horizontal">
+                {% csrf_token %}
+                <div class="row form-group">
+                    <div class="col col-md-3"><label for="hf-email" class=" form-control-label">Start Date</label></div>
+                    <div class="col-12 col-md-9"><input type="date" id="hf-email" name="st_date" placeholder="Enter Start Date" class="form-control"></div>
+                </div>
+                <div class="row form-group">
+                    <div class="col col-md-3"><label for="hf-password" class=" form-control-label">End Date</label></div>
+                    <div class="col-12 col-md-9"><input type="date" id="hf-password" name="ed_date" placeholder="Enter End Date" class="form-control"></div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary btn-sm">
+                        <i class="fa fa-dot-circle-o"></i> Submit
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

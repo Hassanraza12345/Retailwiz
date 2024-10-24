@@ -1,0 +1,153 @@
+{% extends 'base/index.html' %}
+{% load static %}
+
+{% block rightpanel %}
+
+<div class="breadcrumbs">
+    <div class="breadcrumbs-inner">
+        <div class="row m-0">
+            <div class="col-sm-4">
+                <div class="page-header float-left">
+                    <div class="page-title">
+                        <h1>Dashboard</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-8">
+                <div class="page-header float-right">
+                    <div class="page-title">
+                        <ol class="breadcrumb text-right">
+                            <li><a href="{% url 'home' %}">Dashboard</a></li>
+                            <li class="active">Inventory</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <div class="animated fadeIn">
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header d-flex flex-wrap justify-content-between align-items-center">
+                        <strong class="card-title">Inventory</strong>
+                        
+                        <form class="d-flex align-items-center search mb-2 mb-md-0" method="get" action="{% url 'inventory' %}">
+                            <input class="form-control form-control-sm mr-1" type="text" placeholder="Search" aria-label="Search" name="q" value="{{ query }}">
+                            <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                        </form>
+                        <div class="d-flex mr-5">
+                        <div class="dropdown for-notification mr-3">
+                            <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <i class="fa fa-save"></i>
+                            </button>
+                            <div class="dropdown-menu dropdown-menu-left" aria-labelledby="notification" style="width: auto; min-width: 80px;">
+                                <a class="dropdown-item" href="{% url 'generate_pdf' 'inventory' %}">
+                                    <button class="btn btn-link dropdown-item media btn-sm p-0" style="width: 100%;" type="button">PDF</button>
+                                </a>
+                                <a class="dropdown-item" href="{% url 'generate_csv' 'inventory' %}">
+                                    <button class="btn btn-link dropdown-item media btn-sm p-0" style="width: 100%;" type="button">CSV</button>
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="dropdown">
+                            <button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> 
+                                <i class="fa-solid fa-filter"></i>
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="filterDropdown">
+                                <label class="dropdown-item"><input type="checkbox" checked onclick="toggleColumn(0)"> Index</label>
+                                <label class="dropdown-item"><input type="checkbox" checked onclick="toggleColumn(1)"> Item Code</label>
+                                <label class="dropdown-item"><input type="checkbox" checked onclick="toggleColumn(2)"> Item Description</label>
+                                <label class="dropdown-item"><input type="checkbox" checked onclick="toggleColumn(3)"> Rate</label>
+                                <label class="dropdown-item"><input type="checkbox" checked onclick="toggleColumn(4)"> Cost</label>
+                                <label class="dropdown-item"><input type="checkbox" checked onclick="toggleColumn(5)"> Total</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                    
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table id="bootstrap-data-table" class="table table-striped table-bordered">
+                                <thead>
+                                    <tr class="text-center">
+                                        <th>Index</th>
+                                        <th>Item Code</th>
+                                        <th>Item Description</th>
+                                        <th>Rate</th>
+                                        <th>Cost</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for item in page_obj %}
+                                    <tr class="text-center">
+                                        <td>{{ forloop.counter0|add:page_obj.start_index }}</td>
+                                        <td>{{ item.item_code }}</td>
+                                        <td class="text-left">{{ item.Item_desc }}</td>
+                                        <td>{{ item.rate }}</td>
+                                        <td>{{ item.cost }}</td>
+                                        <td>{{ item.rate|add:item.cost }}</td>
+                                    </tr>
+                                    {% empty %}
+                                        <tr class="text-center">
+                                            <td colspan="6">No Result Found</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div><!-- .animated -->
+
+    <ul class="pagination justify-content-end">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1&q={{ query }}" aria-label="First">
+                    <span aria-hidden="true">&laquo;</span> First
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}" aria-label="Previous">
+                    <span aria-hidden="true">&lsaquo;</span> Previous
+                </a>
+            </li>
+        {% endif %}
+
+        <li class="page-item active">
+            <span class="page-link">
+                {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+        </li>
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}" aria-label="Next">
+                    Next <span aria-hidden="true">&rsaquo;</span>
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ query }}" aria-label="Last">
+                    Last <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</div><!-- .content -->
+
+{% endblock %}
+
+
+
+
+
+

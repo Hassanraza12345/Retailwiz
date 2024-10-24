@@ -1,0 +1,239 @@
+{% extends 'base/index.html' %}
+{% load static %}
+
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Ela Admin - HTML5 Admin Template</title>
+    <meta name="description" content="Ela Admin - HTML5 Admin Template">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="https://i.imgur.com/QRAUqs9.png">
+    <link rel="shortcut icon" href="https://i.imgur.com/QRAUqs9.png">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.0/normalize.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/lykmapipo/themify-icons@0.1.2/css/themify-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pixeden-stroke-7-icon@1.2.3/pe-icon-7-stroke/dist/pe-icon-7-stroke.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.2.0/css/flag-icon.min.css">
+    <link rel="stylesheet" href="{% static '/assets/css/cs-skin-elastic.css'%}">
+    <link rel="stylesheet" href="{% static '/assets/css/lib/datatable/dataTables.bootstrap.min.css'%}">
+    <link rel="stylesheet" href="{% static '/assets/css/style.css'%}">
+
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+</head>
+
+
+{% block rightpanel %}
+
+        <div class="breadcrumbs">
+            <div class="breadcrumbs-inner">
+                <div class="row m-0">
+                    <div class="col-sm-4">
+                        <div class="page-header float-left">
+                            <div class="page-title">
+                                <h1>Dashboard</h1>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-8">
+                        <div class="page-header float-right">
+                            <div class="page-title">
+                                <ol class="breadcrumb text-right">
+                                    <li><a href="{% url 'home' %}">Dashboard</a></li>
+                                    <li class="active">Customers</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="animated fadeIn">
+                <div class="row">
+
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <strong class="card-title">Customers</strong>
+                                <form class="d-flex align-items-center search ml-auto" method="get"
+                                    action="{% url 'customer' %}">
+                                    <input class="form-control form-control-sm mr-1" type="text" placeholder="Search" aria-label="Search" name="q" value="{{ query }}">
+                                    <button class="btn btn-primary btn-sm" type="submit">Search</button>
+                                </form>
+                                <div class="dropdown for-notification ml-auto">
+                                    <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="notification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-save"></i>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="saveOptions"style="width: auto; min-width: 80px;">
+
+                                        <a class="dropdown-item" href="{% url 'generate_pdf' 'customer' %}">
+                                            <button class="dropdown-item media btn-sm" style="width: 100%;" type="button">PDF</button>
+                                        </a>
+
+                                        <a class="dropdown-item" href="{% url 'generate_csv' 'customer' %}">
+                                            <button class="dropdown-item media btn-sm" style="width: 100%;" type="button">CSV</button>
+                                        </a>
+                                    </div>
+                                </div>
+                                <div class="dropdown ml-2 mr-5">
+                                    <button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="filterDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa-solid fa-filter"></i>
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="filterDropdown">
+                                        <label class="dropdown-item">
+                                            <input type="checkbox" checked onclick="toggleColumn(0)"> Index
+                                        </label>
+                                        <label class="dropdown-item">
+                                            <input type="checkbox" checked onclick="toggleColumn(1)"> Customer Name
+                                        </label>
+                                        <label class="dropdown-item">
+                                            <input type="checkbox" checked onclick="toggleColumn(2)"> Ph-no
+                                        </label>
+                                        <label class="dropdown-item">
+                                            <input type="checkbox" checked onclick="toggleColumn(3)"> Terms
+                                        </label>
+                                        <label class="dropdown-item">
+                                            <input type="checkbox" checked onclick="toggleColumn(4)"> Current Bal
+                                        </label>
+                                        <label class="dropdown-item">
+                                            <input type="checkbox" checked onclick="toggleColumn(5)"> Search Code
+                                        </label>
+                                        <label class="dropdown-item">
+                                            <input type="checkbox" checked onclick="toggleColumn(6)"> Customer Type
+                                        </label>
+                                    </div>
+                                </div>
+                                
+                                <strong class="card-title"></strong> <!-- You can remove this if it's unnecessary -->
+                            </div>
+                            
+                            
+                            <div class="card-body">
+                                <table id="bootstrap-data-table" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr class="text-center">
+                                            <th>Index</th>
+                                            <th>Customer Name</th>
+                                            <th>Ph-no</th>
+                                            <th>Current Bal</th>
+                                            <th>Customer Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for item in page_obj %}
+                                        <tr class="text-center">
+                                            <td>{{ forloop.counter0|add:page_obj.start_index }}</td>
+                                            <td>{{ item.cust_name }}</td>
+                                            <td class="text-start">{{ item.ph_no }}</td>
+                                            
+                                            <td>{{ item.current_bal }}</td>
+                                            
+                                            <td>{{ item.customer_type }}</td>
+                                        </tr>
+                                        {% empty %}
+                                            <tr class="text-center">
+                                                <td colspan="6">No Result Found</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
+            </div><!-- .animated -->
+            <ul class="pagination justify-content-end">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1&q={{ query }}" aria-label="First">
+                            <span aria-hidden="true">&laquo;</span> First
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}&q={{ query }}" aria-label="Previous">
+                            <span aria-hidden="true">&lsaquo;</span> Previous
+                        </a>
+                    </li>
+                {% endif %}
+            
+                <li class="page-item active">
+                    <span class="page-link">
+                        {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+            
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}&q={{ query }}" aria-label="Next">
+                            Next <span aria-hidden="true">&rsaquo;</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}&q={{ query }}" aria-label="Last">
+                            Last <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div><!-- .content -->
+
+
+
+    {% endblock %}
+    
+    
+    <!-- Filter -->
+    <script>
+        function toggleColumn(colIndex) {
+            const table = document.querySelector("table");
+            const rows = table.rows;
+    
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].cells;
+                if (cells[colIndex]) {
+                    // Toggle visibility of the column
+                    cells[colIndex].style.display = cells[colIndex].style.display === "none" ? "" : "none";
+                }
+            }
+        }
+    </script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/jquery@2.2.4/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.4/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.1.3/dist/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery-match-height@0.7.2/dist/jquery.matchHeight.min.js"></script>
+    <script src="{% static '/assets/js/main.js'%}"></script>
+
+
+    <script src="{% static '/assets/js/lib/data-table/datatables.min.js'%}"></script>
+    <script src="{% static '/assets/js/lib/data-table/dataTables.bootstrap.min.js'%}"></script>
+    <script src="{% static '/assets/js/lib/data-table/dataTables.buttons.min.js'%}"></script>
+    <script src="{% static '/assets/js/lib/data-table/buttons.bootstrap.min.js'%}"></script>
+    <script src="{% static '/assets/js/lib/data-table/jszip.min.js'%}"></script>
+    <script src="{% static '/assets/js/lib/data-table/vfs_fonts.js'%}"></script>
+    <script src="{% static '/assets/js/lib/data-table/buttons.html5.min.js'%}"></script>
+    <script src="{% static '/assets/js/lib/data-table/buttons.print.min.js'%}"></script>
+    <script src="{% static '/assets/js/lib/data-table/buttons.colVis.min.js'%}"></script>
+    <script src="{% static '/assets/js/init/datatables-init.js'%}"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+          $('#bootstrap-data-table-export').DataTable();
+      } );
+  </script>
+
+
+</body>
+</html>
