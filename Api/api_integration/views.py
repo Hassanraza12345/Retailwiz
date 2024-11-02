@@ -1,9 +1,8 @@
-import io,csv,re, os
-from django.conf import settings
+import csv
+from ipaddress import ip_address
+import re
 from django.template.loader import render_to_string
 from django.shortcuts import render,redirect
-from django.urls import reverse
-from lxml import etree as ET 
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from.import connection as conn
@@ -13,6 +12,7 @@ from django.core.cache import cache
 from datetime import datetime
 from weasyprint import HTML
 from django.templatetags.static import static
+from .utils import get_client_ip, get_location
 
 
 
@@ -56,6 +56,9 @@ def login_view(request):
             return render(request, 'login/login.html')
         else:
             # Store serv_id in session
+            ip_address=get_client_ip(request)
+            location_data= get_location(ip_address)
+            print(location_data)
             request.session['serv_id'] = serv_id
             return redirect(home)
     else:
